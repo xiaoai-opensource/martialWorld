@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:paddingTop="10dip"
+    android:paddingBottom="10dip"
+    android:paddingLeft="5dip"
+    android:paddingRight="5dip"
+    android:gravity="center_horizontal"
+    >
+    
+    <TextView 
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="18dp"
+        android:text="本App专注于武侠小说，由于本人热衷于金庸小说，因此内置了金庸的全部小说"
+        />
+    <TextView 
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="18dp"
+        android:layout_marginTop="10dip"
+        android:text="作者 江湖郎中 专注于app开发，有意见建议还望联系我，谢谢"
+        />
+    <TextView 
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="18dp"
+        android:layout_marginTop="10dip" 
+        android:text="联系方式：xiaoai_opensource@163.com"
+        />
+
+</LinearLayout>
