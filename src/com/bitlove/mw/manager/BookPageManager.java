@@ -43,7 +43,7 @@ public class BookPageManager {
 	public int mLineMargin = 10;//行间距
 	public float mVisibleHeight; // 绘制内容的高
 	public float mVisibleWidth; // 绘制内容的宽
-	public int m_fontSize = 26;// 字体大小
+	public int m_fontSize = 36;// 字体大小
 
 	public Vector<String> mLines = new Vector<String>();;
 	public int mLineCount; // 每页可以显示的行数

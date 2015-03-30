@@ -4,21 +4,37 @@
     android:layout_height="wrap_content" >
 
     <LinearLayout
+        android:id="@+id/layout_book"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/grid_item_margin_left"
         android:layout_marginTop="@dimen/grid_item_margin_top"
         android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:id="@+id/layout_book"
-        >
-		 <ImageView 
-		     android:id="@+id/bookImg"
-		     android:layout_height="110dip"
-		     android:layout_width="90dip"
-		     android:src="@drawable/book_shelf_local_brown"
-		     />
-         <TextView
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/layoutImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/bookImg"
+                android:layout_width="110dip"
+                android:layout_height="120dip"
+                android:src="@drawable/book_shelf_local_brown" />
+
+            <ImageView
+                android:layout_toRightOf="@id/bookImg"
+                android:id="@+id/btnDel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="-25dp"
+                android:visibility="invisible"
+                android:src="@drawable/delete" />
+        </RelativeLayout>
+
+        <TextView
             android:id="@+id/bookName"
             android:layout_width="90dip"
             android:layout_height="wrap_content"
@@ -26,16 +42,5 @@
             android:gravity="center_horizontal"
             android:text="bookName" />
     </LinearLayout>
-    <ImageView 
-        android:id="@+id/btnDel"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@id/layout_book"
-        android:layout_marginTop="5dip"
-        android:layout_marginRight="5dip"
-        android:src="@drawable/delete"
-        android:visibility="invisible"
-        />
 
 </RelativeLayout>

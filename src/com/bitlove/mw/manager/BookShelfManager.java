@@ -2,9 +2,9 @@ package com.bitlove.mw.manager;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.bitlove.mw.R;
+import com.bitlove.mw.Util;
 import com.bitlove.mw.activity.BookActivity;
 import com.bitlove.mw.pojo.Book;
 import com.bitlove.mw.remind.ToastReminder;
@@ -36,7 +36,8 @@ public class BookShelfManager {
 	private static BookShelfManager mManager;
 	//书架
 	private GridLayout bookShelf;	
-	
+	//是否出于删除状态
+	public boolean isInDel = false;
 	
 	private BookShelfManager(){}
 	public static BookShelfManager getInstance(Context context){
@@ -235,28 +236,30 @@ public class BookShelfManager {
 			if(da!=null){
 				img.setImageDrawable(da);
 			}
-			
-			layout.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(mContext,BookActivity.class);
-					intent.putExtra("bookName", book.getBookName());
-					mContext.startActivity(intent);
-				}
-			});
 			final ImageView btnDel = (ImageView) layout.findViewById(R.id.btnDel);
-			btnDel.setOnClickListener(new OnClickListener() {
+			final View layoutImg = layout.findViewById(R.id.layoutImg);
+			
+			layoutImg.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
-					mManager.remoceFromShelf(layout,book.getBookName());
+					if(isInDel){
+						btnDel.setTag(null);
+						mManager.remoceFromShelf(layout,book.getBookName());
+						isInDel = false;
+					}else{
+						Intent intent = new Intent(mContext,BookActivity.class);
+						intent.putExtra("bookName", book.getBookName());
+						mContext.startActivity(intent);
+					}
 				}
 			});
-			layout.setOnLongClickListener(new OnLongClickListener() {
+			layoutImg.setOnLongClickListener(new OnLongClickListener() {
 				
 				@Override
 				public boolean onLongClick(View v) {
+					isInDel = true;
+					Util.Vibrator();
 					showDelIcon(btnDel);
 					return true;
 				}
@@ -322,6 +325,17 @@ public class BookShelfManager {
 	 * 显示删除按钮
 	 * */
 	private void showDelIcon(ImageView btnDel){
+		btnDel.setTag("deleTing");
 		btnDel.setVisibility(View.VISIBLE);
 	}
+	/**
+	 * 取消删除状态
+	 * */
+	public void cancelDel(){
+		isInDel = false;
+		View btnDel = bookShelf.findViewWithTag("deleTing");
+		btnDel.setVisibility(View.INVISIBLE);
+		btnDel.setTag(null);
+	}
+	
 }

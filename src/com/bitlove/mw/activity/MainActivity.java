@@ -1,23 +1,16 @@
 package com.bitlove.mw.activity;
 
 import com.bitlove.mw.R;
-import com.bitlove.mw.R.layout;
-import com.bitlove.mw.R.menu;
 import com.bitlove.mw.manager.BookShelfManager;
 import com.bitlove.mw.manager.DialogManager;
-import com.bitlove.mw.remind.ToastReminder;
 
 import android.os.Bundle;
-import android.provider.CalendarContract.Reminders;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.widget.GridLayout;
-import android.widget.Toast;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity{
 	private GridLayout bookShelf;	//书架
 	private BookShelfManager mBookShelfManager;
 
@@ -67,5 +60,13 @@ public class MainActivity extends BaseActivity {
 		mBookShelfManager.initBookShelf();
 	}
 	
+	@Override
+	public void onBackPressed() {
+		if(mBookShelfManager.isInDel){
+			mBookShelfManager.cancelDel();
+		}else{
+			super.onBackPressed();
+		}
+	}
 
 }
