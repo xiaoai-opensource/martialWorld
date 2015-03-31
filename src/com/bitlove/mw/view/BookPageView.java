@@ -1,11 +1,8 @@
 package com.bitlove.mw.view;
 
-import com.bitlove.mw.manager.BookPageManager;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 
 public class BookPageView extends View {
