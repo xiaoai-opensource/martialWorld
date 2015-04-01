@@ -33,6 +33,7 @@ public class BookActivity extends BaseActivity {
 	View curPage;
 	View nextPage;
 	private int mCurPos=1;	//1:pre,2:cur,3:next
+	public boolean lazyLoad = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class BookActivity extends BaseActivity {
 		setContentView(R.layout.activity_book);
 		bookName = getIntent().getStringExtra("bookName");
 		init();
+		lazyLoad = true;
 		LoadBookPage();
 		loadPageNext();
 		loadPagePre();
@@ -130,114 +132,128 @@ public class BookActivity extends BaseActivity {
 	 * 加载当前页
 	 * */
 	private void LoadBookPage(){
-		curPage = mPageManager.getCurrentPage();
-		ViewGroup cur = getPageLayout(getPos(1));
-		cur.removeAllViews();
-		cur.addView(curPage);
-		cur.setVisibility(View.VISIBLE);
+		if(!lazyLoad){
+			curPage = mPageManager.getCurrentPage();
+			ViewGroup cur = getPageLayout(getPos(2));
+			cur.removeAllViews();
+			cur.addView(curPage);
+			changeLayoutVisible(2);
+		}else{
+
+			LoadBookPage loadBookPage = new LoadBookPage();
+			loadBookPage.setOnPostListener(new AsynTaskListener() {
+
+				@Override
+				public void onPostExecute(View result) {
+					curPage = result;
+					ViewGroup cur = getPageLayout(getPos(2));
+					cur.removeAllViews();
+					cur.addView(curPage);
+					changeLayoutVisible(2);
+				}
+
+				@Override
+				public View doInBackground(String... params) {
+					return mPageManager.getCurrentPage();
+				}
+			});
+			loadBookPage.execute(bookName);
+		}
+
 		
-		/*
-		LoadBookPage loadBookPage = new LoadBookPage();
-		loadBookPage.setOnPostListener(new AsynTaskListener() {
 
-			@Override
-			public void onPostExecute(View result) {
-				curPage = result;
-				ViewGroup cur = getPageLayout(getPos(1));
-				cur.removeAllViews();
-				cur.addView(curPage);
-			}
-
-			@Override
-			public View doInBackground(String... params) {
-				return mPageManager.getCurrentPage();
-			}
-		});
-		loadBookPage.execute(bookName);
-		*/
 	}
 	/**
 	 * 加载下一页
 	 * */
 	private void loadPageNext(){
-		nextPage = mPageManager.getNextPage();
-		ViewGroup next = getPageLayout(getPos(3));
-		next.removeAllViews();
-		next.addView(nextPage);
-		/*
-		LoadBookPage loadBookPage = new LoadBookPage();
-		loadBookPage.setOnPostListener(new AsynTaskListener() {
+		if(!lazyLoad){
+			nextPage = mPageManager.getNextPage();
+			ViewGroup next = getPageLayout(getPos(3));
+			next.removeAllViews();
+			next.addView(nextPage);
+		}else{
+			LoadBookPage loadBookPage = new LoadBookPage();
+			loadBookPage.setOnPostListener(new AsynTaskListener() {
 
-			@Override
-			public void onPostExecute(View result) {
-				nextPage = result;
-				
-				ViewGroup next = getPageLayout(getPos(3));
-				next.removeAllViews();
-				next.addView(nextPage);
+				@Override
+				public void onPostExecute(View result) {
+					nextPage = result;
 
-			}
+					ViewGroup next = getPageLayout(getPos(3));
+					next.removeAllViews();
+					next.addView(nextPage);
 
-			@Override
-			public View doInBackground(String... params) {
-				return mPageManager.getNextPage();
-			}
-		});
-		loadBookPage.execute(bookName);
-		*/
+				}
+
+				@Override
+				public View doInBackground(String... params) {
+					return mPageManager.getNextPage();
+				}
+			});
+			loadBookPage.execute(bookName);
+		}
 	}
 	/**
 	 * 加载上一页
 	 * */
 	private void loadPagePre(){
-		prePage = mPageManager.getPrePage();
-		ViewGroup pre = getPageLayout(getPos(1));
-		pre.removeAllViews();
-		pre.addView(prePage);
-		/*
-		LoadBookPage loadBookPage = new LoadBookPage();
-		loadBookPage.setOnPostListener(new AsynTaskListener() {
+		if(!lazyLoad){
+			prePage = mPageManager.getPrePage();
+			ViewGroup pre = getPageLayout(getPos(1));
+			pre.removeAllViews();
+			pre.addView(prePage);
+		}else{
+			LoadBookPage loadBookPage = new LoadBookPage();
+			loadBookPage.setOnPostListener(new AsynTaskListener() {
 
-			@Override
-			public void onPostExecute(View result) {
-				prePage = result;
-				ViewGroup pre = getPageLayout(getPos(1));
-				pre.removeAllViews();
-				pre.addView(prePage);
-			}
+				@Override
+				public void onPostExecute(View result) {
+					prePage = result;
+					ViewGroup pre = getPageLayout(getPos(1));
+					pre.removeAllViews();
+					pre.addView(prePage);
+				}
 
-			@Override
-			public View doInBackground(String... params) {
-				return mPageManager.getPrePage();
-			}
-		});
-		loadBookPage.execute(bookName);
-		*/
+				@Override
+				public View doInBackground(String... params) {
+					return mPageManager.getPrePage();
+				}
+			});
+			loadBookPage.execute(bookName);
+		}
 	}
 
 	/**
 	 * 显示下一页
 	 * */
 	private void showNextPage(){
-		ViewGroup next = getPageLayout(getPos(3));
-		next.setVisibility(View.VISIBLE);
-		
-		ViewGroup cur = getPageLayout(getPos(2));
-		cur.setVisibility(View.INVISIBLE);
+		lazyLoad = false;
+		System.out.println("showNextPage");
+		changeLayoutVisible(3);
+
 		mCurPos = mCurPos+1>3?1:mCurPos+1;
 		loadPageNext();
+	}
+
+	private void changeLayoutVisible(int type){
+		for(int i=1;i<=3;i++){
+			ViewGroup group = getPageLayout(getPos(i));
+			if(i!=type){
+				group.setVisibility(View.INVISIBLE);
+			}else{
+				group.setVisibility(View.VISIBLE);
+			}
+		}
 	}
 
 	/**
 	 * 显示上一页
 	 * */
 	private void showPrePage(){
-		ViewGroup pre = getPageLayout(getPos(1));
-		pre.setVisibility(View.VISIBLE);
-		
-		ViewGroup cur = getPageLayout(getPos(2));
-		cur.setVisibility(View.INVISIBLE);
-		
+		lazyLoad = false;
+		System.out.println("showPrePage");
+		changeLayoutVisible(1);
 		mCurPos = mCurPos-1<1?3:mCurPos-1;
 		loadPagePre();
 	}
@@ -258,8 +274,9 @@ public class BookActivity extends BaseActivity {
 		//下一页
 		if(type==3){
 			int prePos = mCurPos + 1;
-			pos = prePos<3?prePos:1;
+			pos = prePos<=3?prePos:1;
 		}
+
 		return pos;
 	}
 	/**

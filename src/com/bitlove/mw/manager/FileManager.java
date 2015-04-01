@@ -27,6 +27,7 @@ public class FileManager {
 	
 	public String m_strCharsetName = "GBK";
 	private int m_mbBufLen = 0;
+	final int PRE_LENGTH = 800;	//预加载长度
 	
 	private String tag="martialWorld";
 	
@@ -39,8 +40,8 @@ public class FileManager {
 		return mFileManager;
 	}
 	
-	
-	public RandomAccessFile getFile(String fileName){
+	public RandomAccessFile getFile(String fileName,int pos){
+		int begin = pos >PRE_LENGTH?pos-PRE_LENGTH:0;
 		BookShelfManager mShelfManager = BookShelfManager.getInstance(mContext);
 		Book book = mShelfManager.getBookByName(fileName);
 		mFileName = fileName;
@@ -59,13 +60,22 @@ public class FileManager {
 			}
 			localFile = new RandomAccessFile(localFilePath, "r");
 			m_mbBufLen = (int) localFile.length();
-			m_mbBuf = localFile.getChannel().map(FileChannel.MapMode.READ_ONLY, 0,m_mbBufLen);
+			
+			int len = m_mbBufLen>PRE_LENGTH?PRE_LENGTH:m_mbBufLen;
+			
+			m_mbBuf = localFile.getChannel().map(FileChannel.MapMode.READ_ONLY, begin,m_mbBufLen);
 		
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}   
+		
+		return localFile;
+	}
+	public RandomAccessFile getFile(String fileName){
+		
+		localFile = getFile(fileName,0);
 		
 		return localFile;
 	}
