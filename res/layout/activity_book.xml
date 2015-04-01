@@ -9,10 +9,12 @@
         android:gravity="center"
         android:orientation="vertical" >
 
-        <TextView
-            android:layout_width="wrap_content"
+        <ImageView 
+            android:id="@+id/animLoadingImg"
             android:layout_height="wrap_content"
-            android:text="加载中。。。" />
+            android:layout_width="wrap_content"
+            android:src="@drawable/loading_book"
+            />
     </LinearLayout>
 
     <FrameLayout
@@ -25,17 +27,17 @@
             android:visibility="invisible"
             android:id="@+id/page1"
             />
-        <FrameLayout 
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:id="@+id/page2"
-            />
         
         <FrameLayout 
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:visibility="invisible"
             android:id="@+id/page3"
+            />
+         <FrameLayout 
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:id="@+id/page2"
             />
     </FrameLayout>
 

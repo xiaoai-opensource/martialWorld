@@ -50,6 +50,7 @@ public class BookPageManager {
 	public int mPageNum=0;		//当前页数
 	public int mPos=0;
 	public int mLineWords=0;
+	public int mSingleLineWords=0;	//每行显示最大数
 	public int mLineKey=0;
 	private String tag="martialWorld";
 
@@ -61,6 +62,7 @@ public class BookPageManager {
 			
 			mPageManager.setScreenInfo();
 			mPageManager.initBookPage();
+			mPageManager.calSingleLineCount();
 		}
 		mPageManager.mPreference = PreferenceManager.getInstance(context);
 		if(!mPageManager.mBookName.equals(bookName)){
@@ -101,6 +103,17 @@ public class BookPageManager {
 			len = str.length();
 		}
 		return len;
+	}
+	/**
+	 * 计算屏幕一行最大的显示字数
+	 * */
+	public int calSingleLineCount(){
+		StringBuilder sb = new StringBuilder();
+		for(int i=0;i<200;i++){
+			sb.append("测试");
+		}
+		mSingleLineWords = mPaint.breakText(sb.toString(), true, mVisibleWidth,	null);
+		return mSingleLineWords;
 	}
 	/**
 	 * 获取当前进度
@@ -198,11 +211,13 @@ public class BookPageManager {
 			mPos += buf.length;
 			try {
 				String strParagraph = new String(buf, fm.m_strCharsetName);
-				while (strParagraph.length() > 0) {
-					int nSize = mPaint.breakText(strParagraph, true, mVisibleWidth,
-							null);
+				int strLen = strParagraph.length();
+				while (strLen > 0) {
+					//int nSize = mPaint.breakText(strParagraph, true, mVisibleWidth,	null);
+					int nSize = strLen>mSingleLineWords?mSingleLineWords:strLen;
 					mLines.add(strParagraph.substring(0, nSize));
 					strParagraph = strParagraph.substring(nSize);
+					strLen = strLen - nSize;
 				}
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
@@ -263,6 +278,7 @@ public class BookPageManager {
 		mHeight = screenHeight;
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		mPaint.setSubpixelText(true);
 		mPaint.setTextAlign(Align.LEFT);
 		mPaint.setColor(m_textColor);
 		mPaint.setTextSize(m_fontSize);
